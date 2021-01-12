@@ -1,0 +1,184 @@
+html {
+    /*background-image: -webkit-linear-gradient(bottom, #F4E2C9 20%, #F4D7C9 100%);*/
+    /*background-image: -ms-linear-gradient(bottom, #F4E2C9 20%, #F4D7C9 100%);*/
+    /*background-image: linear-gradient(to bottom, #F4E2C9 20%, #F4D7C9 100%)*/
+    /*background-color: #fff;*/
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    color: #464637;
+    min-height: 100%;
+    font-size: 20px;
+    font-family: roboto, sans-serif;
+    font-weight: 300
+}
+
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none
+}
+
+.container {
+    margin: 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+@media (min-width: 750px) and (max-width: 970px) {
+    .container {
+        width: 100%;
+        min-width: 750px
+    }
+}
+
+.sortable-ghost {
+    opacity: .2
+}
+
+img {
+    border: 0;
+    vertical-align: middle
+}
+
+.logo {
+    top: 55px;
+    left: 30px;
+    position: absolute
+}
+
+.title {
+    color: #fff;
+    padding: 3px 10px;
+    display: inline-block;
+    position: relative;
+    background-color: #ff7373;
+    font-size: 15px;
+}
+
+.title_xl {
+    padding: 3px 15px;
+    font-size: 40px
+}
+
+.tile {
+    width: 22%;
+    min-width: 245px;
+    color: #ff7270;
+    padding: 10px 30px;
+    text-align: center;
+    margin-top: 15px;
+    margin-left: 5px;
+    margin-right: 30px;
+    background-color: #fff;
+    display: inline-block;
+    vertical-align: top
+}
+
+
+.block {
+    opacity: 1;
+    position: absolute
+}
+
+
+#editable li:hover i {
+    opacity: 1
+}
+
+
+.drag-handle {
+    margin-right: 5px;
+    font: 700 14px Sans-Serif;
+    color: #5f9edf;
+    display: inline-block;
+    cursor: move;
+    cursor: -webkit-grabbing;
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden; /*文字溢出的部分隐藏起来*/
+    text-overflow: ellipsis;
+}
+
+#col {
+    width: 90px
+}
+
+#col .drag-handle {
+    width: 80px;
+}
+
+
+.page .item {
+    width: 100px;
+    display: inline-block;
+}
+
+.row .item {
+    width: 100px;
+    display: inline-block;
+}
+
+
+.item {
+    margin: 5px;
+    background-color: #e2e2e2;
+}
+
+.page {
+    min-width: 800px;
+}
+
+.row {
+    min-width: 800px;
+    margin-left: 100px;
+}
+
+.col {
+    margin-left: 5px;
+    margin-top: -62px;
+    width: 100px;
+}
+
+#col {
+    height: 400px;
+    padding-top: 5px;
+}
+
+.panel {
+    background-color: #fff;
+}
+
+
+/*定义要拖拽元素的样式*/
+
+.page .itemselect {
+    display: block;
+    width: 90px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.page .el-select {
+    display: block;
+}
+
+.ghost .el-select {
+    display: none;
+}
+
+.drag {
+    background-color: #a2a1a1 !important;
+    opacity: 1 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background-image: none !important;
+}
+
+.ghost {
+    background-color: #a2a1a1 !important;
+}

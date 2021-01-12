@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>属性维护</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/static/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layuiadmin/style/admin.css" media="all">
+</head>
+<style>
+    body, html {
+        height: 100%;
+    }
+
+
+    .layrow, .layui-card {
+        height: 100%;
+    }
+
+    .hide {
+        display: none;
+    }
+
+
+</style>
+<body>
+<div class=" layrow" id="right">
+    <div class="layui-card">
+        <div class="layui-row">
+            <div class="layui-elem-quote layui-quote-nm">
+                <strong>属性信息</strong>
+                <div class="layui-btn-group">
+                    <button type="button" action="add" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon">&#xe654;</i>
+                    </button>
+                    <button type="button" action="del" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon">&#xe640;</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row" id="righttable">
+            <table class="layui-hide" id="attrtable" lay-filter="attrtable">
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="/static/layuiadmin/layui/layui.js"></script>
+<script src="/static/common/utils.js"></script>
+<script>
+    var FIELD="",ATTRID="";
+
+    layui.config({
+        base: '/static/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'jquery', 'layer', 'form', 'table'], function () {
+        $ = layui.$, layer = layui.layer, form = layui.form, table = layui.table;
+
+        dimid = getUrlParam('dimid');
+        //渲染
+        attrBtnEvent.init();
+        bindEvent();
+    });
+
+    function restInitVars() {
+        FIELD = "";
+        ATTRID = "";
+    }
+
+    //维度左侧事件
+    var bindEvent = function () {
+        //右侧按钮事件
+        $('#right button').click(function () {
+            var action = $(this).attr('action');
+            attrBtnEvent[action]();
+        });
+        //监听单元格编辑
+        table.on('edit(attrtable)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+            fetchPost("/attrvalue/updateValue", {code: data.code, attrvalue: value, attrname: field, dimid: dimid,attrid:ATTRID})
+        });
+        //监听行单击事件（双击事件为：rowDouble）
+        table.on('row(attrtable)', function (obj) {
+            var data = obj.data;
+            //标注选中样式
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+        });
+
+        //监听单元格事件
+        table.on('tool(attrtable)', function(obj){
+            let attrids = obj.event.split(',');
+            FIELD=attrids[0];
+            ATTRID=attrids[1];
+        });
+    };
+
+    //成员工具栏操作区域
+    var attrBtnEvent = {
+        add: function () {
+            if (dimid) {
+                showPrompt('新增属性', function (name) {
+                    var attr = {
+                        dimid: dimid,
+                        attrname: name
+                    };
+                    fetchPost("/attr/insert", attr, attrBtnEvent.init);
+                });
+            }
+        },
+        edit: function () {
+            if (field && field != "name" && field != "code") {
+                fetchGet("/member/detail?id=" + memberid, function (member) {
+
+                });
+
+            }
+        },
+        del: function () {
+            if (FIELD && FIELD != "name" && FIELD != "code") {
+                showConfirm("提示", "确定删除属性[" + FIELD + "]么?", function () {
+                    fetchPost("/attrvalue/delete", {dimid: dimid, attrname: FIELD,attrid: ATTRID}, attrBtnEvent.init);
+                });
+            }
+        },
+        init: function () {
+            reloadTable(false);
+        },
+        reload: function () {
+            reloadTable(true);
+        }
+    }
+
+    function reloadTable(reload) {
+        restInitVars();
+        fetchGet('/attr/list?dimid=' + dimid, (data) => {
+            var tableoptions = {};
+            if (!data || data.length == 0) {
+                tableoptions = {
+                    elem: '#attrtable'
+                    , id: 'attrtable'
+                    , height: 'full-85'
+                    , cols: [[{field: 'col', title: '属性'}]]
+                    , data: []
+                };
+            } else {
+                //展示已知数据
+                tableoptions = {
+                    elem: '#attrtable'
+                    , id: 'attrtable'
+                    , height: 'full-85'
+                    , cols: [data]
+                    , url: '/attrvalue/listAttrValues?dimid=' + dimid
+                    , parseData: function (res) { //res 即为原始返回的数据
+                        return {
+                            "code": res.code == 200 ? 0 : res.code, //解析接口状态
+                            "msg": res.message, //解析提示文本
+                            "count": res.data.length, //解析数据长度
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                };
+
+            }
+            if (reload) {
+                table.reload('attrtable', tableoptions);//重载
+            } else {
+                table.render(tableoptions);//初始化
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
