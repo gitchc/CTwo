@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
-public class OCRUtils {
+public class OCRUtil {
 
 
     private static String OCRUrl = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic";
